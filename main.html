@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContactForm</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/> -->
+</head>
+<body>
+    <div id="container">
+
+        <form id="contact-form">
+
+            <div class="header">
+                <h6>
+                    <i class="fas fa-envelope"></i>
+                    Contact Us
+                </h6>
+            </div>
+
+            <div class="inputBox">
+                <input type="text" id="name" placeholder="Enter Your Name" required>
+            </div>
+
+            <div class="inputBox">
+                <input type="text" id="emailid" placeholder="Enter Your Email" required>
+            </div>
+
+            <div class="inputBox">
+                <textarea id="msgContent" cols="40" placeholder="Enter Your Messages" required></textarea>
+            </div>
+
+            <button type="submit">Send Message</button>
+
+        </form>
+    </div>
+
+</body>
+
+
+
+     <!-- Insert this script at the bottom of the HTML, but before you use any Firebase services -->
+     <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js'
+
+        // Add Firebase products that you want to use
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+        import { getDatabase, ref, push, set } from 'https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js'
+
+    // TODO: Replace the following with your app's Firebase project configuration
+    const firebaseConfig = {
+     apiKey: "your apikey",
+     authDomain: " ",
+     databaseURL: " ",
+     projectId: " ",
+     storageBucket: " ",
+     messagingSenderId: " ",
+     appId: " "
+    };
+
+
+    
+    // initialize firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth();
+
+    // reference your database
+    // var contactFormDB = firebase.database().ref("ContactForm");
+    const contactFormDB = ref(database, "ContactForm");
+
+    document.getElementById("contact-form").addEventListener("submit", submitForm);
+
+    function submitForm(e) {
+    e.preventDefault(); 
+
+    var name = getElementVal("name");
+    var emailid = getElementVal("emailid");
+    var msgContent = getElementVal("msgContent");
+
+    saveMessages(name, emailid, msgContent);
+    }
+
+    const saveMessages = (name, emailid, msgContent) => {
+        const newContactForm = push(contactFormDB);
+
+    set(newContactForm, {
+        name: name,
+        emailid: emailid,
+        msgContent: msgContent,
+    });
+    alert('Submitted!')
+    };
+
+    const getElementVal = (id) => {
+    return document.getElementById(id).value;
+    };
+</script>
+</html>
